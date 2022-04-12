@@ -2,6 +2,8 @@ import axios from 'axios';
 import {subsidyStatus} from "./constants";
 import cheerio from 'cheerio';
 import {FCEVInterface, FCEVReceiptInterface} from "./types/FCEV";
+import { PrismaClient } from '@prisma/client'
+const prisma = new PrismaClient()
 
 const parseFCEVCount = (textString:string): FCEVReceiptInterface => {
     const parsedList = textString
@@ -43,8 +45,40 @@ const requestFCEVStatus = async () => {
         }
         listOfStatus.push(row);
     })
-    console.log(listOfStatus)//.filter(l=>l.city === "함평군"));
+    saveLogData(listOfStatus);
+}
+const saveLogData = async (list: FCEVInterface[]) => {
 
+    // list.forEach(async item => {
+    //     const id = await prisma.region.create({
+    //         data: {
+    //             province: item.province,
+    //             city: item.city
+    //         },
+    //     })
+    //     console.log(id)
+    //     // await prisma.announcement.create({
+    //     //     data: {
+
+    //     //     }
+    //     // })
+    // })
+    // // const regions = list.map((data) => {
+    // //    return {
+    // //        city: data.city,
+    // //        province: data.province
+    // //    }
+    // // })
+    // // const countRegion = await prisma.region.count();
+    // // console.log(countRegion, regions)
+    // // // if(countRegion < regions.length) {
+    // //     await prisma.region.createMany({
+    // //         data: regions,
+    // //         skipDuplicates: true
+    // //     })
+    // //     // return true;
+    // // // }
+    // // return false
 }
 
 requestFCEVStatus();
