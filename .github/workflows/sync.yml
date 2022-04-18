@@ -1,0 +1,44 @@
+name: NurizipFCEVSync
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  push:
+    branches:
+      - main
+jobs:
+  fcev-subsidy-sync:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    name: Synchronize EV.OR.KR - FCEV Subsidy status
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Cache node modules
+        id: node-cache
+        uses: actions/cache@v2
+        env:
+          cache-name: caceh-node-modules
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-
+      - name: Use NPM v8
+        run: npm i -g npm@8
+      - name: Install Dependencies
+        run: npm install
+      - name: Connect to tailscale env
+        uses: tailscale/github-action@v1
+        with:
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+      - name: run Sync
+        run: npm run start
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+
+
