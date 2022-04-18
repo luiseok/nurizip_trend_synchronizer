@@ -8,6 +8,7 @@ on:
 jobs:
   fcev-subsidy-sync:
     runs-on: ubuntu-latest
+    environment: development
     strategy:
       matrix:
         node-version: [16.x]
