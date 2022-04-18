@@ -1,7 +1,7 @@
 name: NurizipFCEVSync
 on:
   schedule:
-    - cron: "0 0 * * *"
+    - cron: "0 0-9/3 * * 1-5"
   push:
     branches:
       - main
