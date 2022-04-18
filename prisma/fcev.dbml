@@ -1,0 +1,81 @@
+Project nurizip_crawler {
+  database_type: "PostgreSQL"
+  note: '''
+    Korean pollution-free cars portal's subsidy status
+  '''
+}
+
+Table region {
+  region_id int [pk, increment]
+  province varchar(10) [not null]
+  city varchar(20) [not null]
+}
+
+Table announcement {
+  announcement_id int [pk, increment]
+  region_id int
+  
+  category varchar [note: '차종']
+  details varchar [note: '공고 상세']
+  hash varchar(32) [note: '공고 상세의 md5 해쉬']
+
+  period varchar [note: '수혜년도']
+  
+  total int [not null]
+  priority int
+  general int
+  
+  created_at timestamp [default:`now()`]
+  updated_at timestamp [default:`now()`]
+}
+
+Table applicant {
+  applicant_id int [pk, increment]
+  region_id int
+  announcement_id int
+  
+  total int
+  priority int
+  general int
+  
+  created_at timestamp [default:`now()`]
+}
+
+Table shipment {
+  shipment_id int [pk, increment]
+  region_id int
+  announcement_id int
+  
+  total int
+  priority int
+  general int
+  
+  created_at timestamp [default:`now()`]
+}
+
+Table remaining {
+  remaining_id int [pk, increment]
+  region_id int
+  announcement_id int
+  
+  total int
+  priority int
+  general int
+  
+  created_at timestamp [default:`now()`]
+}
+
+Table job_log {
+  log_id int [pk, increment]
+  did_succeed boolean [default:true]
+  created_at timestamp [default:`now()`]
+}
+
+Ref: "region"."region_id" < "announcement"."region_id" [delete: cascade, update: no action]
+Ref: "region"."region_id" < "applicant"."region_id" [delete: cascade, update: no action]
+Ref: "region"."region_id" < "shipment"."region_id" [delete: cascade, update: no action]
+Ref: "region"."region_id" < "remaining"."region_id" [delete: cascade, update: no action]
+
+Ref: "announcement"."announcement_id" < "applicant"."announcement_id" [delete: cascade, update: no action]
+Ref: "announcement"."announcement_id" < "shipment"."announcement_id" [delete: cascade, update: no action]
+Ref: "announcement"."announcement_id" < "remaining"."announcement_id" [delete: cascade, update: no action]

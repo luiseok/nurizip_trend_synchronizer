@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model announcement {
+  announcement_id Int         @id @default(autoincrement())
+  region_id       Int?
+  category        String?     @db.VarChar
+  period          String?     @db.VarChar
+  details         String?     @db.VarChar
+  hash            String?     @db.VarChar(32)
+  total           Int
+  priority        Int?
+  general         Int?
+  amount          Int?
+  created_at      DateTime?   @default(now()) @db.Timestamp(6)
+  updated_at      DateTime?   @updatedAt @db.Timestamp(6)
+  region          region?     @relation(fields: [region_id], references: [region_id], onDelete: Cascade, onUpdate: NoAction)
+  applicant       applicant[]
+  remaining       remaining[]
+  shipment        shipment[]
+}
+
+model applicant {
+  applicant_id    Int           @id @default(autoincrement())
+  region_id       Int?
+  announcement_id Int?
+  total           Int?
+  priority        Int?
+  general         Int?
+  created_at      DateTime?     @default(now()) @db.Timestamp(6)
+  announcement    announcement? @relation(fields: [announcement_id], references: [announcement_id], onDelete: Cascade, onUpdate: NoAction)
+  region          region?       @relation(fields: [region_id], references: [region_id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model job_log {
+  log_id      Int       @id @default(autoincrement())
+  did_succeed Boolean?  @default(true)
+  created_at  DateTime? @default(now()) @db.Timestamp(6)
+}
+
+model region {
+  region_id    Int            @id @default(autoincrement())
+  province     String         @db.VarChar(10)
+  city         String         @db.VarChar(20)
+  announcement announcement[]
+  applicant    applicant[]
+  remaining    remaining[]
+  shipment     shipment[]
+
+  @@unique([province, city], map: "region_province_city_idx")
+}
+
+model remaining {
+  remaining_id    Int           @id @default(autoincrement())
+  region_id       Int?
+  announcement_id Int?
+  total           Int?
+  priority        Int?
+  general         Int?
+  created_at      DateTime?     @default(now()) @db.Timestamp(6)
+  announcement    announcement? @relation(fields: [announcement_id], references: [announcement_id], onDelete: Cascade, onUpdate: NoAction)
+  region          region?       @relation(fields: [region_id], references: [region_id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model shipment {
+  shipment_id     Int           @id @default(autoincrement())
+  region_id       Int?
+  announcement_id Int?
+  total           Int?
+  priority        Int?
+  general         Int?
+  created_at      DateTime?     @default(now()) @db.Timestamp(6)
+  announcement    announcement? @relation(fields: [announcement_id], references: [announcement_id], onDelete: Cascade, onUpdate: NoAction)
+  region          region?       @relation(fields: [region_id], references: [region_id], onDelete: Cascade, onUpdate: NoAction)
+}
