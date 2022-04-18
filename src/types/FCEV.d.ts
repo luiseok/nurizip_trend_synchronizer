@@ -1,20 +1,29 @@
-interface FCEVReceiptInterface {
+interface FCEVReceipt {
     total: number;
     priority: number;
     general: number;
 }
-interface FCEVInterface {
+interface FCEVSubsidyStatus {
     province: string;
     city: string;
     category: string;
-    announcements: FCEVReceiptInterface;
-    applicants: FCEVReceiptInterface;
-    shipments: FCEVReceiptInterface;
-    remaining: FCEVReceiptInterface;
-    note?: string;
+    announcement: FCEVReceipt;
+    applicant: FCEVReceipt;
+    shipment: FCEVReceipt;
+    remaining: FCEVReceipt;
+    details?: string;
+    hash?: string;
+    amount: number
+}
+interface FCEVSubsidy {
+    province: string,
+    city: string,
+    category: string,
+    amount: number
 }
 
 export {
-    FCEVInterface,
-    FCEVReceiptInterface
+    FCEVSubsidyStatus,
+    FCEVReceipt,
+    FCEVSubsidy
 }

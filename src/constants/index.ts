@@ -1,6 +1,17 @@
+const BASE_URL = "https://ev.or.kr"
+
 const subsidyStatus = {
-    FCEV: "https://www.ev.or.kr/portal/localInfo_h2",
-    EV: "https://www.ev.or.kr/portal/localInfo_h2"
+    FCEV: "portal/localInfo_h2",
+    EV: "portal/localInfo_h2"
 }
 
-export { subsidyStatus };
+const subsidyAmount = {
+    FCEV: "h2/pass/h2PopupLocalCarPirce"
+}
+
+const axiosHeader = {
+    userAgent: "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; FCEVSubsidyBot/1.0; +https://fcev-subsidy.luiseok.com) Safari/537.36",
+    urlFormEncoded: "application/x-www-form-urlencoded"
+}
+
+export { BASE_URL, subsidyStatus, subsidyAmount, axiosHeader };
