@@ -192,6 +192,18 @@ const saveLogData = async (list: FCEVSubsidyStatus[]) => {
     ])
 }
 
-requestFreshFCEVStatus().finally(async () => {
+requestFreshFCEVStatus().then(_ => {
+    return prisma.job_log.create({
+        data: {
+            did_succeed: true
+        }
+    })
+}).catch(e => {
+    return prisma.job_log.create({
+        data: {
+            did_succeed: false
+        }
+    })
+}).finally(async () => {
     await prisma.$disconnect();
 })
